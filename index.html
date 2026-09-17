@@ -108,13 +108,11 @@
   <p class="sub">Cole o nome (ou vários nomes, um por linha) e clique em Formatar.</p>
 
   <label for="entrada">Nome(s):</label>
-  <textarea id="entrada" placeholder="duianny belger da silva"></textarea>
-
-  <button onclick="formatar()">Formatar</button>
+  <textarea id="entrada" placeholder="duianny belger da silva" oninput="formatar()"></textarea>
 
   <label for="saida">Resultado:</label>
   <div class="output" id="saida"></div>
-  <button class="copy-btn" onclick="copiar()">Copiar resultado</button>
+  <button class="copy-btn" id="copyBtn" onclick="copiar()">Copiar resultado</button>
 </div>
 
 <script>
@@ -138,10 +136,15 @@
   function copiar() {
     const texto = document.getElementById("saida").textContent;
     if (!texto) return;
+    const btn = document.getElementById("copyBtn");
     navigator.clipboard.writeText(texto).then(() => {
-      alert("Copiado!");
+      const original = btn.textContent;
+      btn.textContent = "Copiado!";
+      setTimeout(() => { btn.textContent = original; }, 1200);
     }).catch(() => {
-      alert("Não foi possível copiar automaticamente. Selecione o texto manualmente.");
+      const original = btn.textContent;
+      btn.textContent = "Erro ao copiar";
+      setTimeout(() => { btn.textContent = original; }, 1200);
     });
   }
 </script>
