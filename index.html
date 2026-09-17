@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Formatador de Nomes</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root {
+    --bg: #ffffff;
+    --text: #1a1a1a;
+    --card: #f4f4f5;
+    --border: #d4d4d8;
+    --accent: #2563eb;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #18181b;
+      --text: #f4f4f5;
+      --card: #27272a;
+      --border: #3f3f46;
+      --accent: #60a5fa;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #18181b;
+    --text: #f4f4f5;
+    --card: #27272a;
+    --border: #3f3f46;
+    --accent: #60a5fa;
+  }
+  * { box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    padding: 40px 16px;
+    margin: 0;
+  }
+  .container {
+    max-width: 480px;
+    width: 100%;
+  }
+  h1 {
+    font-size: 1.3rem;
+    margin-bottom: 4px;
+  }
+  p.sub {
+    color: var(--text);
+    opacity: 0.7;
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 0.95rem;
+  }
+  textarea, .output {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--text);
+    font-size: 1rem;
+    font-family: inherit;
+    resize: vertical;
+  }
+  textarea {
+    min-height: 90px;
+  }
+  label {
+    font-weight: 600;
+    font-size: 0.9rem;
+    display: block;
+    margin-bottom: 6px;
+    margin-top: 18px;
+  }
+  .output {
+    min-height: 90px;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  button {
+    margin-top: 20px;
+    width: 100%;
+    padding: 12px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  button:active { opacity: 0.85; }
+  .copy-btn {
+    margin-top: 8px;
+    background: transparent;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    padding: 8px;
+    font-size: 0.9rem;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Formatador de Nomes</h1>
+  <p class="sub">Cole o nome (ou vários nomes, um por linha) e clique em Formatar.</p>
+
+  <label for="entrada">Nome(s):</label>
+  <textarea id="entrada" placeholder="duianny belger da silva"></textarea>
+
+  <button onclick="formatar()">Formatar</button>
+
+  <label for="saida">Resultado:</label>
+  <div class="output" id="saida"></div>
+  <button class="copy-btn" onclick="copiar()">Copiar resultado</button>
+</div>
+
+<script>
+  const minusculas = ["da", "de", "do", "das", "dos", "e"];
+
+  function formatarLinha(nome) {
+    const palavras = nome.trim().toLowerCase().split(/\s+/).filter(Boolean);
+    return palavras.map((palavra, i) => {
+      if (i > 0 && minusculas.includes(palavra)) return palavra;
+      return palavra.charAt(0).toUpperCase() + palavra.slice(1);
+    }).join(" ");
+  }
+
+  function formatar() {
+    const texto = document.getElementById("entrada").value;
+    const linhas = texto.split("\n").map(l => l.trim()).filter(l => l.length > 0);
+    const resultado = linhas.map(formatarLinha).join("\n");
+    document.getElementById("saida").textContent = resultado;
+  }
+
+  function copiar() {
+    const texto = document.getElementById("saida").textContent;
+    if (!texto) return;
+    navigator.clipboard.writeText(texto).then(() => {
+      alert("Copiado!");
+    }).catch(() => {
+      alert("Não foi possível copiar automaticamente. Selecione o texto manualmente.");
+    });
+  }
+</script>
+</body>
+</html>
